@@ -149,7 +149,7 @@ export interface WebhookPayloadWithRepository {
   }
   action: string
   installation: {
-    id: number
+    id: string
   }
 
 }

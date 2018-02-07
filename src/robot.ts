@@ -2,6 +2,7 @@ import * as express from 'express'
 import logger from './logger'
 import Context from './context'
 import wrapLogger, {LoggerWithTarget} from './wrap-logger'
+import * as Octokit from '@octokit/rest'
 const {EventEmitter} = require('promise-events')
 const GitHubApi = require('./github')
 
@@ -144,8 +145,8 @@ export class Robot {
    * @returns {Promise<github>} - An authenticated GitHub API client
    * @private
    */
-  async auth (id?: number, log = this.log) {
-    const github = new GitHubApi({
+  async auth (id?: string, log = this.log) {
+    const github: OctokitWithPagination = new GitHubApi({
       debug: process.env.LOG_LEVEL === 'trace',
       host: process.env.GHE_HOST || 'api.github.com',
       pathPrefix: process.env.GHE_HOST ? '/api/v3' : '',
@@ -183,6 +184,13 @@ interface RobotOptions {
   cache: RobotCache
   router?: express.Router
   catchErrors: boolean
+}
+
+interface OctokitPaginationCallbackValue {
+  data: Array<any>
+}
+interface OctokitWithPagination extends Octokit {
+  paginate: (res: Promise<Octokit.AnyResponse>, callback: (results: OctokitPaginationCallbackValue) => void) => void
 }
 
 /**
