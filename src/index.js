@@ -2,10 +2,10 @@ import createApp from './github-app'
 import createRobot from './robot'
 import logger from './logger'
 import createServer from './server'
+import resolve from './resolver'
 const cacheManager = require('cache-manager')
 const createWebhook = require('github-webhook-handler')
 const createWebhookProxy = require('./webhook-proxy')
-const resolve = require('./resolver')
 const logRequestErrors = require('./middleware/log-request-errors')
 
 const cache = cacheManager.caching({

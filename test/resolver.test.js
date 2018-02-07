@@ -1,4 +1,4 @@
-const resolve = require('../lib/resolver')
+const resolve = require('../lib/resolver').default
 
 const stubPluginPath = require.resolve('./fixtures/plugin/stub-plugin')
 const basedir = process.cwd()
