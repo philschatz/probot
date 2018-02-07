@@ -1,6 +1,6 @@
 import * as express from 'express'
-import logger from './logger'
 import Context from './context'
+import logger from './logger'
 import wrapLogger, {LoggerWithTarget} from './wrap-logger'
 import * as Octokit from '@octokit/rest'
 const {EventEmitter} = require('promise-events')
@@ -176,9 +176,14 @@ interface EventWithEventField {
   event: string
 }
 
+// The TypeScript definition for cache-manager does not export the Cache interface so we recreate it here
 interface RobotCache {
-  wrap: (key: string, callback: () => void, cacheOptions: {ttl: number}) => {data: {token: string}}
+  wrap<T>(key: string, wrapper: (callback: (error: any, result: T) => void) => any, options: RobotCacheConfig): Promise<any>;
 }
+interface RobotCacheConfig {
+    ttl: number;
+}
+
 interface RobotOptions {
   app: () => string
   cache: RobotCache

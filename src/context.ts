@@ -1,7 +1,7 @@
+import * as path from 'path'
+import * as yaml from 'js-yaml'
 import * as GitHubApi from '@octokit/rest'
 import {LoggerWithTarget} from './wrap-logger'
-const path = require('path')
-const yaml = require('js-yaml')
 
 /**
  * Helpers for extracting information from the webhook event, which can be

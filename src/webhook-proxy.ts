@@ -16,8 +16,8 @@ export default (opts: WebhookProxyOptions) => {
 }
 
 interface WebhookProxyOptions {
-  url: string
-  port: number
-  path: string
+  url?: string
+  port?: number
+  path?: string
   logger: Logger
 }

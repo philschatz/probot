@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rimraf lib && tsc -p tsconfig.json",
     "start": "node ./bin/probot run",
-    "test": "jest --coverage && standard --fix && npm run doc-lint",
+    "test": "npm run build && jest --coverage && standard --fix && npm run doc-lint",
     "doc-lint": "standard docs/**/*.md",
     "doc": "jsdoc -c .jsdoc.json",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
@@ -23,17 +23,8 @@
     "coveragePathIgnorePatterns": [
       "<rootDir>/lib/"
     ],
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json",
-      "node"
-    ],
-    "transform": {
-      ".+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-    },
     "testMatch": [
-      "<rootDir>/test/*.(ts|js)"
+      "<rootDir>/test/*.js"
     ],
     "testPathIgnorePatterns": [
       "<rootDir>/test/setup.js"
@@ -66,17 +57,12 @@
     "@types/bunyan": "^1.8.4",
     "@types/bunyan-format": "^0.2.0",
     "@types/cache-manager": "^1.2.5",
-    "@types/dotenv": "^4.0.2",
     "@types/express": "^4.0.39",
-    "@types/jest": "^21.1.8",
     "@types/js-yaml": "^3.10.1",
     "@types/jsonwebtoken": "^7.2.5",
-    "@types/nock": "^9.1.0",
     "@types/node": "^8.5.1",
     "@types/raven": "^2.1.2",
     "@types/resolve": "^0.0.4",
-    "@types/semver": "^5.4.0",
-    "@types/supertest": "^2.0.4",
     "connect-sse": "^1.2.0",
     "eslint": "^4.6.1",
     "eslint-plugin-markdown": "^1.0.0-beta.6",

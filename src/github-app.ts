@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+import * as jwt from 'jsonwebtoken'
 
 export default function (options: AppOptions) {
   return function () {
@@ -13,4 +13,7 @@ export default function (options: AppOptions) {
   }
 }
 
-interface AppOptions {id: number, cert: string}
+interface AppOptions {
+  id: string
+  cert: string
+}

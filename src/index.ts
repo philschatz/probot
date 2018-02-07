@@ -1,11 +1,11 @@
+import * as cacheManager from 'cache-manager'
 import createApp from './github-app'
-import createRobot from './robot'
-import logger from './logger'
+import createRobot, {Robot} from './robot'
 import createServer from './server'
 import resolve from './resolver'
-const cacheManager = require('cache-manager')
+import logger from './logger'
+import createWebhookProxy from './webhook-proxy'
 const createWebhook = require('github-webhook-handler')
-const createWebhookProxy = require('./webhook-proxy')
 const logRequestErrors = require('./middleware/log-request-errors')
 
 const cache = cacheManager.caching({
@@ -19,7 +19,7 @@ const defaultApps = [
   require('./plugins/default')
 ]
 
-module.exports = (options = {}) => {
+module.exports = (options: ProbotOptions) => {
   options.webhookPath = options.webhookPath || '/'
   options.secret = options.secret || 'development'
 
@@ -31,7 +31,7 @@ module.exports = (options = {}) => {
   const server = createServer({webhook, logger})
 
   // Log all received webhooks
-  webhook.on('*', event => {
+  webhook.on('*', (event: any) => {
     logger.info({event}, 'Webhook received')
     receive(event)
   })
@@ -39,18 +39,18 @@ module.exports = (options = {}) => {
   // Log all webhook errors
   webhook.on('error', logger.error.bind(logger))
 
-  const robots = []
+  const robots: Array<Robot> = []
 
-  function receive (event) {
+  function receive (event: any) {
     return Promise.all(robots.map(robot => robot.receive(event)))
   }
 
-  function load (plugin) {
+  function load (plugin: string | ProbotPlugin) {
     if (typeof plugin === 'string') {
-      plugin = resolve(plugin)
+      plugin = <ProbotPlugin> resolve(plugin)
     }
 
-    const robot = createRobot({app, cache, logger, catchErrors: true})
+    const robot = createRobot({app, cache, catchErrors: true})
 
     // Connect the router from the robot to the server
     server.use(robot.router)
@@ -62,7 +62,7 @@ module.exports = (options = {}) => {
     return robot
   }
 
-  function setup (apps) {
+  function setup (apps: Array<string | ProbotPlugin>) {
     // Log all unhandled rejections
     process.on('unhandledRejection', logger.error.bind(logger))
 
@@ -98,3 +98,14 @@ module.exports = (options = {}) => {
 }
 
 module.exports.createRobot = createRobot
+
+interface ProbotPlugin { (robot: Robot): void }
+
+interface ProbotOptions {
+  webhookPath?: string
+  secret?: string,
+  id: string,
+  cert: string,
+  webhookProxy?: string,
+  port?: number
+}
