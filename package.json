@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rimraf lib && tsc -p tsconfig.json",
     "start": "node ./bin/probot run",
-    "test": "jest --coverage && standard && npm run doc-lint",
+    "test": "jest --coverage && standard --fix && npm run doc-lint",
     "doc-lint": "standard docs/**/*.md",
     "doc": "jsdoc -c .jsdoc.json",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
@@ -80,6 +80,7 @@
     "connect-sse": "^1.2.0",
     "eslint": "^4.6.1",
     "eslint-plugin-markdown": "^1.0.0-beta.6",
+    "eslint-plugin-typescript": "^0.8.1",
     "jest": "^22.0.3",
     "jsdoc": "^3.5.5",
     "jsdoc-strip-async-await": "^0.1.0",
@@ -90,15 +91,18 @@
     "standard": "^10.0.3",
     "supertest": "^3.0.0",
     "ts-jest": "^21.2.4",
-    "typescript": "^2.6.2"
+    "typescript": "~2.6.2",
+    "typescript-eslint-parser": "^12.0.0"
   },
   "standard": {
     "env": [
       "jest"
     ],
     "plugins": [
-      "markdown"
-    ]
+      "markdown",
+      "typescript"
+    ],
+    "parser": "typescript-eslint-parser"
   },
   "engines": {
     "node": ">=7.7"

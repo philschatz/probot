@@ -1,6 +1,7 @@
 // Borrowed from https://github.com/vvo/bunyan-request
 // Copyright (c) Christian Tellnes <christian@tellnes.no>
 var uuid = require('uuid')
+const wrapLogger = require('../wrap-logger')
 
 module.exports = function logRequest ({logger}) {
   return function (req, res, next) {
@@ -11,7 +12,7 @@ module.exports = function logRequest ({logger}) {
     res.setHeader('x-request-id', req.id)
 
     // Make a logger available on the request
-    req.log = logger.wrap().child({id: req.id})
+    req.log = wrapLogger(logger, logger.target).child({id: req.id})
 
     // Request started
     req.log.trace({req}, `${req.method} ${req.url}`)

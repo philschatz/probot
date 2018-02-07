@@ -3,6 +3,7 @@ const express = require('express')
 const Context = require('./context')
 const logger = require('./logger')
 const GitHubApi = require('./github')
+const wrapLogger = require('./wrap-logger')
 
 /**
  * The `robot` parameter available to apps
@@ -15,7 +16,7 @@ class Robot {
     this.app = app
     this.cache = cache
     this.router = router || new express.Router()
-    this.log = logger.wrap()
+    this.log = wrapLogger(logger, logger)
     this.catchErrors = catchErrors
   }
 
