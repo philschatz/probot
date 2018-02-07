@@ -1,10 +1,10 @@
 import * as express from 'express'
 import * as Logger from 'bunyan'
+import logger from './logger'
 import Context from './context'
+import wrapLogger  from './wrap-logger'
 const {EventEmitter} = require('promise-events')
-const logger = require('./logger')
 const GitHubApi = require('./github')
-const wrapLogger = require('./wrap-logger')
 
 /**
  * The `robot` parameter available to apps
@@ -170,7 +170,7 @@ class Robot {
   }
 }
 
-module.exports = (options: RobotOptions) => new Robot(options)
+export default (options: RobotOptions) => new Robot(options)
 
 interface EventWithEventField {
   event: string

@@ -1,6 +1,6 @@
 const request = require('supertest')
 const express = require('express')
-const logger = require('../../lib/logger')
+const logger = require('../../lib/logger').default
 const logging = require('../../lib/middleware/logging')
 
 describe('logging', () => {

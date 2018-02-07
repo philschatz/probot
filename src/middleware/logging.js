@@ -1,7 +1,7 @@
 // Borrowed from https://github.com/vvo/bunyan-request
 // Copyright (c) Christian Tellnes <christian@tellnes.no>
 var uuid = require('uuid')
-const wrapLogger = require('../wrap-logger')
+const wrapLogger = require('../wrap-logger').default
 
 module.exports = function logRequest ({logger}) {
   return function (req, res, next) {

@@ -1,6 +1,6 @@
 const Context = require('../lib/context').default
-const createRobot = require('../lib/robot')
-const logger = require('../lib/logger')
+const createRobot = require('../lib/robot').default
+const logger = require('../lib/logger').default
 
 describe('Robot', function () {
   let robot

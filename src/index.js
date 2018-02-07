@@ -1,11 +1,11 @@
+import createApp from './github-app'
+import createRobot from './robot'
+import logger from './logger'
+import createServer from './server'
 const cacheManager = require('cache-manager')
 const createWebhook = require('github-webhook-handler')
-const createApp = require('./github-app')
-const createRobot = require('./robot')
-const createServer = require('./server')
 const createWebhookProxy = require('./webhook-proxy')
 const resolve = require('./resolver')
-const logger = require('./logger')
 const logRequestErrors = require('./middleware/log-request-errors')
 
 const cache = cacheManager.caching({

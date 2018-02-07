@@ -65,4 +65,4 @@ const logger = new Logger({
   serializers
 })
 
-module.exports = logger
+export default logger
