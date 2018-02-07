@@ -1,3 +1,5 @@
+import * as GitHubApi from 'github'
+import * as Logger from 'bunyan'
 const path = require('path')
 const yaml = require('js-yaml')
 
@@ -10,7 +12,10 @@ const yaml = require('js-yaml')
  * @property {logger} log - A logger
  */
 class Context {
-  constructor (event, github, log) {
+  github: GitHubApi
+  log: Logger
+  payload: WebhookPayloadWithRepository
+  constructor (event: any, github: GitHubApi, log: Logger) {
     Object.assign(this, event)
     this.github = github
     this.log = log
@@ -28,13 +33,13 @@ class Context {
    * // Returns: {owner: 'username', repo: 'reponame', path: '.github/stale.yml'}
    *
    */
-  repo (object) {
+  repo (object?: PossibleReposGetContentParams) {
     const repo = this.payload.repository
 
     return Object.assign({
       owner: repo.owner.login || repo.owner.name,
       repo: repo.name
-    }, object)
+    }, object) as GitHubApi.ReposGetContentParams
   }
 
   /**
@@ -49,7 +54,7 @@ class Context {
    *
    * @param {object} [object] - Params to be merged with the issue params.
    */
-  issue (object) {
+  issue (object: PossibleReposGetContentParams) {
     const payload = this.payload
     return Object.assign({
       number: (payload.issue || payload.pull_request || payload).number
@@ -97,7 +102,7 @@ class Context {
    * @param {object} [defaultConfig] - An object of default config options
    * @return {Promise<Object>} - Configuration object read from the file
    */
-  async config (fileName, defaultConfig) {
+  async config<T> (fileName: string, defaultConfig: T) {
     const params = this.repo({path: path.posix.join('.github', fileName)})
 
     try {
@@ -114,6 +119,29 @@ class Context {
         throw err
       }
     }
+  }
+}
+
+interface PossibleReposGetContentParams {
+  path: string
+}
+
+interface WebhookPayloadWithRepository {
+  repository: {
+    name: string
+    owner: {
+      login: string
+      name: string
+    }
+  }
+  issue: {
+    number: number
+  }
+  pull_request: {
+    number: number
+  }
+  sender: {
+    type: string
   }
 }
 
