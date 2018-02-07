@@ -12,6 +12,7 @@ const yaml = require('js-yaml')
  * @property {logger} log - A logger
  */
 class Context {
+  id?: string // Is this used? It is assumed in robot
   github: GitHubApi
   log: Logger
   payload: WebhookPayloadWithRepository
@@ -143,6 +144,11 @@ interface WebhookPayloadWithRepository {
   sender: {
     type: string
   }
+  action: string
+  installation: {
+    id: number
+  }
+
 }
 
-module.exports = Context
+export default Context

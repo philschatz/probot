@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const Context = require('../lib/context')
+const Context = require('../lib/context').default
 
 describe('Context', function () {
   let event
