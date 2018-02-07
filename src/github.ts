@@ -1,5 +1,6 @@
+import * as Octokit  from '@octokit/rest'
+import * as Logger  from 'bunyan'
 const Bottleneck = require('bottleneck')
-const Octokit = require('@octokit/rest')
 
 /**
  * the [github Node.js module](https://github.com/octokit/node-github),
@@ -10,9 +11,10 @@ const Octokit = require('@octokit/rest')
  * @see {@link https://github.com/octokit/node-github}
  */
 
-const defaultCallback = response => response
-async function paginate (octokit, responsePromise, callback = defaultCallback) {
-  let collection = []
+const defaultCallback = (response: OctokitPaginationCallbackValue, done: () => void) => response
+
+async function paginate (octokit: OctokitWithPagination, responsePromise: Promise<Octokit.AnyResponse>, callback = defaultCallback) {
+  let collection: Array<any> = []
   let getNextPage = true
   let done = () => {
     getNextPage = false
@@ -27,11 +29,10 @@ async function paginate (octokit, responsePromise, callback = defaultCallback) {
   return collection
 }
 
-function EnhancedGitHubClient (options) {
-  const octokit = Octokit(options)
-  const limiter = options.limiter || new Bottleneck({ maxConcurrent: 1, minTime: 1000 })
-  const logger = options.logger
+function EnhancedGitHubClient (options: Octokit.Options, logger: Logger, limiter?: any) {
+  const octokit = <OctokitWithPagination> new Octokit(options)
   const noop = () => Promise.resolve()
+  limiter = limiter || new Bottleneck({ maxConcurrent: 1, minTime: 1000 })
 
   octokit.hook.before('request', limiter.schedule.bind(limiter, noop))
   octokit.hook.error('request', (error, options) => {
@@ -51,3 +52,35 @@ function EnhancedGitHubClient (options) {
 }
 
 module.exports = EnhancedGitHubClient
+
+
+interface OctokitPaginationCallbackValue {
+  data: Array<any>
+}
+
+interface OctokitRequestOptions {
+  method: string
+  url: string
+  headers: any
+}
+
+interface OctokitResult {
+  meta: {
+    status: string
+  }
+}
+
+interface OctokitError {
+  code: number
+  status: string
+}
+
+interface OctokitWithPagination extends Octokit {
+  paginate: (res: Promise<Octokit.AnyResponse>, callback: (results: OctokitPaginationCallbackValue) => void) => void
+  // The following are added because Octokit does not expose the hook.error, hook.before, and hook.after methods
+  hook: {
+    error: (when: 'request', callback: (error: OctokitError, options: OctokitRequestOptions) => void) => void
+    before: (when: 'request', callback: (result: OctokitResult, options: OctokitRequestOptions) => void) => void
+    after: (when: 'request', callback: (result: OctokitResult, options: OctokitRequestOptions) => void) => void
+  }
+}

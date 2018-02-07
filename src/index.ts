@@ -99,9 +99,9 @@ module.exports = (options: ProbotOptions) => {
 
 module.exports.createRobot = createRobot
 
-interface ProbotPlugin { (robot: Robot): void }
+export interface ProbotPlugin { (robot: Robot): void }
 
-interface ProbotOptions {
+export interface ProbotOptions {
   webhookPath?: string
   secret?: string,
   id: string,
