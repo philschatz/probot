@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["es2017"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2017",
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "sourceMap": true,
+    "outDir": "./lib",
+    "skipLibCheck": true,
+    "noImplicitAny": true, // remove this once we've added all types
+    "declaration": false // enable this once all files are .ts and we can remove allowJs
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "compileOnSave": false
+}
