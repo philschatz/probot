@@ -27,7 +27,7 @@
 
 import * as Logger from 'bunyan'
 import * as bunyanFormat from 'bunyan-format'
-import * as serializers from './serializers'
+import serializers from './serializers'
 
 function toBunyanLogLevel(level: string) {
   switch (level) {

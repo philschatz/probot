@@ -127,14 +127,17 @@ interface PossibleReposGetContentParams {
   path: string
 }
 
-interface WebhookPayloadWithRepository {
-  repository: {
+export interface PayloadRepository {
+  full_name: string
+  name: string
+  owner: {
+    login: string
     name: string
-    owner: {
-      login: string
-      name: string
-    }
   }
+}
+
+export interface WebhookPayloadWithRepository {
+  repository: PayloadRepository
   issue: {
     number: number
   }

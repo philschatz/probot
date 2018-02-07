@@ -1,4 +1,4 @@
-const serializers = require('../lib/serializers')
+const serializers = require('../lib/serializers').default
 
 describe('serializers', () => {
   describe('repository', () => {
