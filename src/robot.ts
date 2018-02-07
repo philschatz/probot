@@ -98,7 +98,7 @@ export class Robot {
 
       return this.events.on(name, async (event: Context) => {
         if (!action || action === event.payload.action) {
-          const log = this.log.child({id: event.id})
+          const log = this.log.child({name: 'event', id: event.id})
 
           try {
             const github = await this.auth(event.payload.installation.id, log)
@@ -149,7 +149,7 @@ export class Robot {
       debug: process.env.LOG_LEVEL === 'trace',
       host: process.env.GHE_HOST || 'api.github.com',
       pathPrefix: process.env.GHE_HOST ? '/api/v3' : '',
-      logger: log.child({installation: id})
+      logger: log.child({name: 'github', installation: id})
     })
 
     if (id) {

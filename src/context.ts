@@ -1,4 +1,4 @@
-import * as GitHubApi from 'github'
+import * as GitHubApi from '@octokit/rest'
 import {LoggerWithTarget} from './wrap-logger'
 const path = require('path')
 const yaml = require('js-yaml')

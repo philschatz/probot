@@ -12,7 +12,7 @@ module.exports = function logRequest ({logger}) {
     res.setHeader('x-request-id', req.id)
 
     // Make a logger available on the request
-    req.log = wrapLogger(logger, logger.target).child({id: req.id})
+    req.log = wrapLogger(logger, logger.target).child({name: 'http', id: req.id})
 
     // Request started
     req.log.trace({req}, `${req.method} ${req.url}`)
