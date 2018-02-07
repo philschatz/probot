@@ -1,8 +1,7 @@
 import * as express from 'express'
-import * as Logger from 'bunyan'
 import logger from './logger'
 import Context from './context'
-import wrapLogger  from './wrap-logger'
+import wrapLogger, {LoggerWithTarget} from './wrap-logger'
 const {EventEmitter} = require('promise-events')
 const GitHubApi = require('./github')
 
@@ -11,13 +10,13 @@ const GitHubApi = require('./github')
  *
  * @property {logger} log - A logger
  */
-class Robot {
+export class Robot {
   events: any
   app: () => string
   cache: RobotCache
   router: express.Router
   catchErrors?: boolean
-  log: Logger
+  log: LoggerWithTarget
 
   constructor (options: RobotOptions) {
     this.events = new EventEmitter()
@@ -55,7 +54,7 @@ class Robot {
    * @param {string} path - the prefix for the routes
    * @returns {@link http://expressjs.com/en/4x/api.html#router|express.Router}
    */
-  route (path: string) {
+  route (path?: string) {
     if (path) {
       const router = express.Router()
       this.router.use(path, router)

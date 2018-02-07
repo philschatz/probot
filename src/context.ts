@@ -1,5 +1,5 @@
 import * as GitHubApi from 'github'
-import * as Logger from 'bunyan'
+import {LoggerWithTarget} from './wrap-logger'
 const path = require('path')
 const yaml = require('js-yaml')
 
@@ -14,9 +14,9 @@ const yaml = require('js-yaml')
 class Context {
   id?: string // Is this used? It is assumed in robot
   github: GitHubApi
-  log: Logger
+  log: LoggerWithTarget
   payload: WebhookPayloadWithRepository
-  constructor (event: any, github: GitHubApi, log: Logger) {
+  constructor (event: any, github: GitHubApi, log: LoggerWithTarget) {
     Object.assign(this, event)
     this.github = github
     this.log = log
