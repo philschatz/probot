@@ -19,7 +19,7 @@ const defaultApps = [
   require('./plugins/default')
 ]
 
-module.exports = (options: ProbotOptions) => {
+module.exports = (options: Options) => {
   options.webhookPath = options.webhookPath || '/'
   options.secret = options.secret || 'development'
 
@@ -45,9 +45,9 @@ module.exports = (options: ProbotOptions) => {
     return Promise.all(robots.map(robot => robot.receive(event)))
   }
 
-  function load (plugin: string | ProbotPlugin) {
+  function load (plugin: string | Plugin) {
     if (typeof plugin === 'string') {
-      plugin = <ProbotPlugin> resolve(plugin)
+      plugin = <Plugin> resolve(plugin)
     }
 
     const robot = createRobot({app, cache, catchErrors: true})
@@ -62,7 +62,7 @@ module.exports = (options: ProbotOptions) => {
     return robot
   }
 
-  function setup (apps: Array<string | ProbotPlugin>) {
+  function setup (apps: Array<string | Plugin>) {
     // Log all unhandled rejections
     process.on('unhandledRejection', logger.error.bind(logger))
 
@@ -99,9 +99,9 @@ module.exports = (options: ProbotOptions) => {
 
 module.exports.createRobot = createRobot
 
-export interface ProbotPlugin { (robot: Robot): void }
+export interface Plugin { (robot: Robot): void }
 
-export interface ProbotOptions {
+export interface Options {
   webhookPath?: string
   secret?: string,
   id: string,

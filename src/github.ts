@@ -11,7 +11,7 @@ const Bottleneck = require('bottleneck')
  * @see {@link https://github.com/octokit/node-github}
  */
 
-const defaultCallback = (response: OctokitPaginationCallbackValue, done: () => void) => response
+const defaultCallback = (response: Octokit.AnyResponse, done: () => void) => response
 
 async function paginate (octokit: OctokitWithPagination, responsePromise: Promise<Octokit.AnyResponse>, callback = defaultCallback) {
   let collection: Array<any> = []
@@ -29,10 +29,11 @@ async function paginate (octokit: OctokitWithPagination, responsePromise: Promis
   return collection
 }
 
-function EnhancedGitHubClient (options: Octokit.Options, logger: Logger, limiter?: any) {
+function EnhancedGitHubClient (options: Options) {
   const octokit = <OctokitWithPagination> new Octokit(options)
   const noop = () => Promise.resolve()
-  limiter = limiter || new Bottleneck({ maxConcurrent: 1, minTime: 1000 })
+  const logger = options.logger
+  const limiter = options.limiter || new Bottleneck({ maxConcurrent: 1, minTime: 1000 })
 
   octokit.hook.before('request', limiter.schedule.bind(limiter, noop))
   octokit.hook.error('request', (error, options) => {
@@ -53,9 +54,9 @@ function EnhancedGitHubClient (options: Octokit.Options, logger: Logger, limiter
 
 module.exports = EnhancedGitHubClient
 
-
-interface OctokitPaginationCallbackValue {
-  data: Array<any>
+interface Options extends Octokit.Options {
+  logger: Logger
+  limiter?: any
 }
 
 interface OctokitRequestOptions {
@@ -76,7 +77,7 @@ interface OctokitError {
 }
 
 interface OctokitWithPagination extends Octokit {
-  paginate: (res: Promise<Octokit.AnyResponse>, callback: (results: OctokitPaginationCallbackValue) => void) => void
+  paginate: (res: Promise<Octokit.AnyResponse>, callback: (results: Octokit.AnyResponse) => void) => void
   // The following are added because Octokit does not expose the hook.error, hook.before, and hook.after methods
   hook: {
     error: (when: 'request', callback: (error: OctokitError, options: OctokitRequestOptions) => void) => void

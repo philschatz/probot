@@ -7,7 +7,7 @@ import * as Logger from 'bunyan'
 //     robot.log.trace("verbose details");
 //
 export default function wrapLogger (logger: Logger, baseLogger?: Logger): LoggerWithTarget {
-  const fn = logger.info.bind(logger);
+  const fn = logger.info.bind(logger)
 
   // Add level methods on the logger
   fn.trace = logger.trace.bind(logger)
@@ -18,7 +18,7 @@ export default function wrapLogger (logger: Logger, baseLogger?: Logger): Logger
   fn.fatal = logger.fatal.bind(logger)
 
   // Expose `child` method for creating new wrapped loggers
-  fn.child = (attrs: {name?: string}) => {
+  fn.child = (attrs: ChildArgs) => {
     // Bunyan doesn't allow you to overwrite name…
     const name = attrs.name
     delete attrs.name
@@ -38,5 +38,9 @@ export default function wrapLogger (logger: Logger, baseLogger?: Logger): Logger
 
 export interface LoggerWithTarget extends Logger {
   target: Logger
-  child: (arg: any) => LoggerWithTarget
+  child: (attrs: ChildArgs) => LoggerWithTarget
+}
+
+interface ChildArgs {
+  name?: string
 }

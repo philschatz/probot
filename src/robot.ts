@@ -92,7 +92,7 @@ export class Robot {
    * });
    */
   on (event: string | Array<string>, callback: (context: Context) => void) {
-    if (typeof event == 'string') {
+    if (typeof event === 'string') {
 
       const [name, action] = event.split('.')
 
@@ -148,8 +148,9 @@ export class Robot {
     const github = new GitHubApi({
       debug: process.env.LOG_LEVEL === 'trace',
       host: process.env.GHE_HOST || 'api.github.com',
-      pathPrefix: process.env.GHE_HOST ? '/api/v3' : ''
-    }, log.child({name: 'github', installation: id}))
+      pathPrefix: process.env.GHE_HOST ? '/api/v3' : '',
+      logger: log.child({name: 'github', installation: id})
+    })
 
     if (id) {
       const res = await this.cache.wrap(`app:${id}:token`, () => {

@@ -34,13 +34,13 @@ class Context {
    * // Returns: {owner: 'username', repo: 'reponame', path: '.github/stale.yml'}
    *
    */
-  repo (object?: PossibleReposGetContentParams) {
+  repo<T> (object: T) {
     const repo = this.payload.repository
 
     return Object.assign({
       owner: repo.owner.login || repo.owner.name,
       repo: repo.name
-    }, object) as GitHubApi.ReposGetContentParams
+    }, object)
   }
 
   /**
@@ -55,11 +55,11 @@ class Context {
    *
    * @param {object} [object] - Params to be merged with the issue params.
    */
-  issue (object: PossibleReposGetContentParams) {
+  issue<T> (object: T) {
     const payload = this.payload
     return Object.assign({
       number: (payload.issue || payload.pull_request || payload).number
-    }, this.repo(), object)
+    }, this.repo(object))
   }
 
   /**
@@ -123,10 +123,6 @@ class Context {
   }
 }
 
-interface PossibleReposGetContentParams {
-  path: string
-}
-
 export interface PayloadRepository {
   full_name: string
   name: string
@@ -136,7 +132,7 @@ export interface PayloadRepository {
   }
 }
 
-export interface WebhookPayloadWithRepository {
+interface WebhookPayloadWithRepository {
   repository: PayloadRepository
   issue: {
     number: number

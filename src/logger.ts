@@ -29,7 +29,7 @@ import * as Logger from 'bunyan'
 import * as bunyanFormat from 'bunyan-format'
 import serializers from './serializers'
 
-function toBunyanLogLevel(level: string) {
+function toBunyanLogLevel (level: string) {
   switch (level) {
     case 'info':
     case 'trace':
@@ -44,7 +44,7 @@ function toBunyanLogLevel(level: string) {
   }
 }
 
-function toBunyanFormat(format: string) {
+function toBunyanFormat (format: string) {
   switch (format) {
     case 'short':
     case 'long':
