@@ -43,4 +43,6 @@ export interface LoggerWithTarget extends Logger {
 
 interface ChildArgs {
   name?: string
+  id?: string
+  installation?: string
 }
